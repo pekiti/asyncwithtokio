@@ -1,26 +1,10 @@
 use tokio::sync::mpsc::{channel, Receiver, Sender};
 
-async fn sleep(ms: u64) {
-    tokio::time::sleep(tokio::time::Duration::from_millis(ms)).await;
-}
+mod timer;
+use timer::sleep;
 
-#[derive(Debug)]
-enum Message {
-    Hello,
-    Rust,
-}
-
-async fn message_generator(channel: Sender<Message>) {
-    loop {
-        match channel.send(Message::Hello).await {
-            Ok(()) => sleep(100).await,
-            Err(_) => {
-                eprintln!("Error sending message");
-                break;
-            }
-        }
-    }
-}
+mod generator;
+use generator::{message_generator, Message};
 
 async fn message_sink(mut channel: Receiver<Message>) {
     loop {

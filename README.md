@@ -12,9 +12,9 @@ https://tokio.rs/
 
 ```bash
 # Run
-cargo run -q --package gettingstartedwithtokio
+cargo run --quiet --package gettingstartedwithtokio
 
-cargo run -q -p tokioagents
+cargo run --quiet --package tokioagents
 ```
 
 

@@ -12,11 +12,13 @@ https://tokio.rs/
 
 ```bash
 # Run
-cargo run -q --package gettingstartedwithtokio
+cargo run -quiet --package gettingstartedwithtokio
+
+cargo run -quiet --package tokioagents
 ```
 
 ## Resources
 
-- [Tutorial](https://tokio.rs/tokio/tutorial)
-
+- [Tokio Tutorial](https://tokio.rs/tokio/tutorial)
+- [Rust Scope](https://doc.rust-lang.org/reference/visibility-and-privacy.html#pubin-path-pubcrate-pubsuper-and-pubself)
 

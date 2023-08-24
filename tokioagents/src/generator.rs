@@ -1,11 +1,10 @@
-use tokio::sync::mpsc::{channel, Receiver, Sender};
+use tokio::sync::mpsc::Sender;
 
 use crate::timer::sleep;
 
-#[derive(Debug)]
 pub enum Message {
     Hello,
-    Rust,
+    // Rust,
 }
 
 pub async fn message_generator(channel: Sender<Message>) {

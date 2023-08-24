@@ -1,29 +1,19 @@
-use tokio::sync::mpsc::{channel, Receiver, Sender};
+use tokio::sync::mpsc::channel;
 
 mod timer;
 use timer::sleep;
 
 mod generator;
-use generator::{message_generator, Message};
+use generator::{message_generator as messenger_send, Message};
 
-async fn message_sink(mut channel: Receiver<Message>) {
-    loop {
-        match channel.recv().await {
-            Some(Message::Hello) => println!("Hello"),
-            Some(Message::Rust) => println!("Rust"),
-            None => {
-                eprintln!("Channel closed");
-                break;
-            }
-        }
-    }
-}
+mod sink;
+use sink::message_sink;
 
 #[tokio::main]
 async fn main() {
     let (tx, rc) = channel::<Message>(32);
 
-    tokio::spawn(message_generator(tx));
+    tokio::spawn(messenger_send(tx));
     tokio::spawn(message_sink(rc));
 
     sleep(2000).await;

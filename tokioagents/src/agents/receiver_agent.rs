@@ -1,14 +1,13 @@
 use tokio::sync::mpsc::Receiver;
 
-use crate::agents::generator_agent::Message;
+use crate::agents::messenger_agent::Message;
 
 pub async fn message_sink(mut channel: Receiver<Message>) {
     loop {
         match channel.recv().await {
-            Some(Message::Hello) => println!("Hello"),
-            // Some(Message::Rust) => println!("Rust"),
+            Some(Message::Hello) => println!("Hello, Rust!"),
             None => {
-                eprintln!("Channel closed");
+                println!("[Receiver] >>>> Channel closed <<<<");
                 break;
             }
         }

@@ -1,2 +1,2 @@
-pub mod messenger_agent;
-pub mod receiver_agent;
+pub mod messageprocessor;
+pub mod messagesink;

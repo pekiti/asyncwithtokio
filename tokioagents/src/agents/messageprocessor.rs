@@ -1,13 +1,14 @@
 use tokio::sync::mpsc::{Receiver, Sender};
 use tokio::sync::oneshot;
 
-// #[non_exhaustive]  allows us adding more variants later.
-// This means that the enum can’t be matched exhaustively and we’ll always need to add a wildcard match arm (_ => {}).
-#[non_exhaustive]
+use serde::{Deserialize, Serialize};
+
+#[derive(Debug, Serialize, Deserialize)]
 pub enum Message {
     Hello,
-    // Rust,
+    Rust,
 }
+
 #[derive(Debug)]
 pub enum StatusResponse {
     Healthy,
@@ -19,7 +20,7 @@ pub enum Command {
     Status(oneshot::Sender<StatusResponse>),
 }
 
-pub async fn messenger_execute(mut command: Receiver<Command>, channel: Sender<Message>) {
+pub async fn execute_command(mut command: Receiver<Command>, channel: Sender<Message>) {
     loop {
         tokio::select! {
             msg = channel.send(Message::Hello) => {

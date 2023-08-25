@@ -3,8 +3,8 @@ use tokio::sync::mpsc::channel;
 use tokio::sync::oneshot;
 
 mod agents;
-use agents::messenger_agent::{messenger_execute, Command, StatusResponse, Message};
-use agents::receiver_agent::message_sink;
+use agents::messageprocessor::{execute_command, Command, StatusResponse, Message};
+use agents::messagesink::publish_message;
 
 mod utils;
 use utils::timer::sleep;
@@ -14,8 +14,8 @@ async fn main() -> Fallible<()> {
     let (tx, rc) = channel::<Message>(32);
     let (ctx, crx) = channel::<Command>(32);
 
-    tokio::spawn(messenger_execute(crx, tx));
-    tokio::spawn(message_sink(rc));
+    tokio::spawn(execute_command(crx, tx));
+    tokio::spawn(publish_message(rc));
 
     sleep(5).await;
 

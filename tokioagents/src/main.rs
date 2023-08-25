@@ -1,36 +1,24 @@
 use failure::Fallible;
-use tokio::sync::mpsc::channel;
-use tokio::sync::oneshot;
-
-mod agents;
-use agents::messageprocessor::{execute_command, Command, StatusResponse, Message};
-use agents::messagesink::publish_message;
+use log::Level;
+use simple_logger;
 
 mod utils;
-use utils::timer::sleep;
+use utils::timer::sleep_for_2_seconds;
+
+mod modules;
+use modules::message_handler_spawner::MessageHandlerSpawner;
+use modules::message_receiver_handler::MessageReceiverHandler;
 
 #[tokio::main]
 async fn main() -> Fallible<()> {
-    let (tx, rc) = channel::<Message>(32);
-    let (ctx, crx) = channel::<Command>(32);
+    simple_logger::init_with_level(Level::Info).unwrap();
 
-    tokio::spawn(execute_command(crx, tx));
-    tokio::spawn(publish_message(rc));
+    let msgss = MessageReceiverHandler::spawn()?;
+    let _msgr = MessageHandlerSpawner::spawn(msgss)?;
 
-    sleep(5).await;
+    sleep_for_2_seconds().await; // print 20 messages
 
-    let (rtx, rrx) = oneshot::channel::<StatusResponse>();
-    println!(">>>> Sending STATUS command <<<<");
-
-    ctx.send(Command::Status(rtx)).await?;
-    println!(">>>> Response: {:?} <<<<", rrx.await?);
-
-    sleep(5).await;
-
-    println!(">>>> Sending STOP command <<<<");
-    ctx.send(Command::Stop).await?;
-
-    //sleep(1000).await;
-
+    log::info!("Exit program");
+   
     Ok(())
 }

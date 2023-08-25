@@ -1,6 +1,6 @@
 use tokio::sync::mpsc::Sender;
 
-use crate::timer::sleep;
+use crate::utils::timer::sleep;
 
 pub enum Message {
     Hello,

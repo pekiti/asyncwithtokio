@@ -1,6 +1,6 @@
 use tokio::sync::mpsc::Receiver;
 
-use crate::generator::Message;
+use crate::agents::generator_agent::Message;
 
 pub async fn message_sink(mut channel: Receiver<Message>) {
     loop {
